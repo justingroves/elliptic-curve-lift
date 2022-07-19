@@ -22,10 +22,8 @@ def IntToWitt(k, p, n):
         if series == ZZp(0):
             continue #Sage has an issue dividing 0 // p?
         else:
-            series = series // p
-        
-        # series = (series - ZZp.teichmuller(tmp)) // p
-        
+            series = series // p    
+	
     return v
 
 def etapols(p,n):
@@ -61,7 +59,6 @@ def vRemoveZeros(v=[]):
         return [ v[0].parent()(0) ]
 		
 def vetav(p, k, v=[], pols=[],check = False):
-    # print("v = ", v)
     v = vRemoveZeros(v) 
     lgt = len(v)
     
@@ -72,9 +69,7 @@ def vetav(p, k, v=[], pols=[],check = False):
     if pols == []:
         pols = etapols(p,k)
         
-    #Problem could be here with the evaluation process...maybe
     if lgt == 2: #Note: only evaluates if the number of inputs is the same as the number of indeterminates in pols
-        # print("v, pol = ", v, pols)
         return [ pol(v) for pol in pols ]
     else:
         v1 = [ v[i] for i in range(0, floor(lgt / 2))] 
@@ -90,8 +85,7 @@ def vetav(p, k, v=[], pols=[],check = False):
         
         for i in range(2, k+1):
             pols = [ pols[i] for i in range(0, k-i+1)]
-            tmp = vetav(p, k-i+1, res[i-2], pols=pols)#Check these indices if something goes wrong
-            # print("tmp = ", tmp)
+            tmp = vetav(p, k-i+1, res[i-2], pols=pols)
             for t in range(i, k+1):
                 if tmp[t-i] != 0:
                     res[t-1].append(tmp[t-i])
@@ -102,14 +96,13 @@ def WittProd1(v1, v2, pols=[]):
     p = P.characteristic()
     n = len(v1) - 1
     res = [ vRemoveZeros([ v1[j]^(p^(i-j))*v2[i-j]^(p^j) for j in range(0, i+1)]) for i in range(0,n + 1)]
-    # print(res) Good to here
+
     if n == 1:
         return [ sum(x for x in res[i]) for i in range(0, len(res))]
     if pols == []:
         pols = etapols(p, n-1)
     if len(pols) > (n-1):
         pols = pols[0:n]
-    # print(pols) Good to here
     
     for i in range(2, n+1):
         l = len(res[i-1])
